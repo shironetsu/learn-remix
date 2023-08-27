@@ -1,5 +1,7 @@
 # Remix を学ぶ
 
+Next.js の App Router や Server Actions の思想の源流があるのを察知したため…。
+
 ## テンプレートから初期化
 
 https://remix.run/docs/en/1.19.3/tutorials/blog
@@ -193,3 +195,66 @@ GET /notes/clltiiyb00001sa4y9nzm7c7d?_data=routes%2Fnotes.%24noteId 200 - - 14.3
 GET / 200 - - 41.244 ms
 
 ```
+
+## ルーティング
+
+`app/routes/_index.tsx` に
+
+```tsx
+<div className="mx-auto mt-16 max-w-7xl text-center">
+  <Link
+    to="/posts"
+    className="text-xl text-blue-600 underline"
+  >
+    Blog Posts
+  </Link>
+</div>
+```
+
+を追加する。Remix にも専用のリンクコンポーネントがあって、
+
+```ts
+import { Link } from "@remix-run/react";
+```
+
+と、`@remix-run/react` に入っている。HTML上では `<a>` タグとして描画される。
+
+ドキュメント上での記載はここ: https://remix.run/docs/en/1.19.3/components/link
+
+`/posts` に対応するコンポーネントを作るために、`app/routes/posts._index.tsx` を作る。
+
+この時点では `/posts` へ遷移してもデバッグ用エラーが出る。
+
+```tsx
+export default function Posts() {
+  return (
+    <main>
+      <h1>Posts</h1>
+    </main>
+  );
+}
+```
+
+を追加して、戻る→進む　しても変わらない（＝キャッシュが効いている）。
+リロードすると反映。
+
+## Loading Data
+
+"Fetching Data" ではないのが肝か？ Remixにおいては「fetchしなくても良い」と訴えている。
+APIをはやしてコンポーネントにfetchさせるという常套手段を使わなくて良い。
+
+> In Remix your frontend component is also its own API route, and it already knows how to talk to itself on the server from the browser.
+
+らしい。
+
+"progressive enhancement" って結局何なんだ？
+
+→ MDN に説明がある。
+
+[Progressive Enhancement \- MDN Web Docs Glossary: Definitions of Web\-related terms \| MDN](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement)
+
+全然最近できた言葉ではなかった。2003年。
+
+[Progressive enhancement \- Wikipedia](https://en.wikipedia.org/wiki/Progressive_enhancement)
+
+`app/routes/posts._index.tsx` ファイル内に `loader` async 関数を追加する。
