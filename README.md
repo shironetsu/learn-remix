@@ -258,3 +258,13 @@ APIをはやしてコンポーネントにfetchさせるという常套手段を
 [Progressive enhancement \- Wikipedia](https://en.wikipedia.org/wiki/Progressive_enhancement)
 
 `app/routes/posts._index.tsx` ファイル内に `loader` async 関数を追加する。
+
+## A little refactoring
+
+`models` にデータ取得用の非同期関数を定義。
+
+`app/models/post.server.ts`
+
+この `.server.` は何か実行上の動作を持つ？
+
+## Pulling from a data source
