@@ -268,3 +268,16 @@ APIをはやしてコンポーネントにfetchさせるという常套手段を
 この `.server.` は何か実行上の動作を持つ？
 
 ## Pulling from a data source
+
+Prisma で `Posts` スキーマの定義。
+
+`prisma migrate dev` について、
+
+> Let's generate a migration file for our schema changes, which will be required if you deploy your application rather than just running in dev mode locally.
+
+と、
+
+- マイグレーションファイルそれ自体はデプロイ用のものであること
+- ローカル開発環境では即時反映されること
+
+が書かれていて親切。
