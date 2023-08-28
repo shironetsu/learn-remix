@@ -281,3 +281,66 @@ Prisma で `Posts` スキーマの定義。
 - ローカル開発環境では即時反映されること
 
 が書かれていて親切。
+
+全然関係ないが、ターミナルのウィンドウを小さくしすぎてコミットの署名に失敗した。
+
+```
+error: gpg failed to sign the data
+fatal: failed to write commit object
+```
+
+## Dynamic Route Params
+
+動的ルーティング。Remixは `posts.$slug.tsx` というスタイル。
+
+これが`/posts/[slug]/` というURLに変換される。
+
+```ts
+import type { LoaderArgs } from "@remix-run/node";
+
+export const loader = async ({ params }: LoaderArgs) => {
+  return json({ slug: params.slug });
+};
+```
+
+`LoaderArgs` という型があるが、
+
+```ts
+export interface DataFunctionArgs {
+    request: Request;
+    context: AppLoadContext;
+    params: Params;
+}
+export type LoaderArgs = DataFunctionArgs;
+```
+
+という固定値。SvelteKitは動的に生成してくれたりするが、そこまで面倒は見てくれない。
+
+> Let's make TypeScript happy with our code:
+
+このフレーズ覚えておこう…。
+
+[tiny-invariant](https://github.com/alexreardon/tiny-invariant) ライブラリでアサーションを行う。`invariant` というライブラリがあり、その軽量版。
+
+アサーションが失敗するとエラーがそのまま投げられるので500エラーになる。
+
+http://localhost:3000/posts/non-existent-article
+```
+Error: Invariant failed: Post not found: non-existent-article
+```
+
+
+Markdownパーサーに[marked](https://www.npmjs.com/package/marked)を使う。サニタイズなしなので注意。
+
+コンソールにメッセージが出る。
+
+```
+ warn  esm-only package: marked
+┃ marked is possibly an ESM-only package.
+┃ To bundle it with your server, include it in `serverDependenciesToBundle`
+┃ -> https://remix.run/docs/en/main/file-conventions/remix-config#serverdependenciestobundle
+┗
+```
+
+`remix.config.js` の `serverDependenciesToBundle` にパッケージ名（のパターン）が書かれた場合、
+サーバー側でのバンドルにマッチするパッケージを含めることができるらしい（？）。
