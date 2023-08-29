@@ -344,3 +344,20 @@ Markdownパーサーに[marked](https://www.npmjs.com/package/marked)を使う�
 
 `remix.config.js` の `serverDependenciesToBundle` にパッケージ名（のパターン）が書かれた場合、
 サーバー側でのバンドルにマッチするパッケージを含めることができるらしい（？）。
+
+## Nested Routing
+
+`blog-tutorial/app/routes/posts._index.tsx` 内から `<Link>` コンポーネントで `to="admin"` とリンクを張ると、
+`/posts/admin` への相対リンクになる。
+
+## Index Routes
+
+なんだこれは...。
+
+`posts.admin.tsx` ← こっちに `<Outlet>` というのを埋め込んでやると...
+
+`posts.admin._index.tsx` ← これが埋め込まれる。Next.js の layout に通ずる。
+
+https://reactrouter.com/en/6.15.0/components/outlet
+
+もし `posts.admin._index.tsx` がなければ、`posts.admin.tsx` がそのまま `/posts/admin` に対応するページとして描画される。
