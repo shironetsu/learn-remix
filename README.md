@@ -361,3 +361,13 @@ Markdownパーサーに[marked](https://www.npmjs.com/package/marked)を使う�
 https://reactrouter.com/en/6.15.0/components/outlet
 
 もし `posts.admin._index.tsx` がなければ、`posts.admin.tsx` がそのまま `/posts/admin` に対応するページとして描画される。
+
+## Actions
+
+> If you've been doing a lot of `<form onSubmit>` and `<button onClick>` you're about to have your mind blown by HTML.
+
+完全にこれ。
+
+`action` という関数を default export すると、フォームを処理する関数になる。
+
+バリデーションエラーを返すと `useActionData` という hook からコンポーネント内で利用できる。
