@@ -371,3 +371,13 @@ https://reactrouter.com/en/6.15.0/components/outlet
 `action` という関数を default export すると、フォームを処理する関数になる。
 
 バリデーションエラーを返すと `useActionData` という hook からコンポーネント内で利用できる。
+
+## Progressive Enhancement
+
+`action` に
+```ts
+  await new Promise((res) => setTimeout(res, 1000));
+```
+を足して、故意にレスポンスを悪化させる。
+
+JavaScript なしでも機能することを保証して、あくまでもより良い体験を提供するためにJSを利用するというスタンス。
