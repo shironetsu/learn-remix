@@ -381,3 +381,21 @@ https://reactrouter.com/en/6.15.0/components/outlet
 を足して、故意にレスポンスを悪化させる。
 
 JavaScript なしでも機能することを保証して、あくまでもより良い体験を提供するためにJSを利用するというスタンス。
+
+## Homework
+
+404 になっている `http://localhost:3000/posts/admin/my-first-post` 等を表示できるようにするため、  `posts.admin.$slug.tsx` を独力で作ってみる。
+
+`loader` と `action` の両方がいる。
+
+`loader` は `posts.$slug.tsx` から拝借する。
+
+~うーん、どこに置けばいいんだろう。とりあえずコピペ。~
+
+Markdownのパースをしなくて良いので中身を変える。
+
+非制御コンポーネントなので `defaultValue` に入れた値が再描画で変わらない。
+
+`key` で強制更新できることは分かっているが、これって本当にベストな方法なのだろうか。
+
+https://github.com/facebook/react/issues/4101
