@@ -433,3 +433,17 @@ export default function Page(){
 当然ながらクライアント側でJSを使うので、無効にすると動かない。
 
 これを踏まえて実装する。
+
+`/posts/admin/new` のフォームの送信が成功した場合、`/posts/admin` に飛ぶことになっている。
+楽観的更新としては、`/posts/admin` っぽい画面が見えて、`/posts/admin/*` の画面左に共通であるリンクが増えていれば良い。
+
+問題は `posts.admin.tsx` (レイアウト相当)の `loader` がこのデータを持っていること。
+`posts.admin.new.tsx` からこのデータにアクセスするには?
+
+→ `useOutletContext` が使えそう。
+
+https://reactrouter.com/en/6.15.0/hooks/use-outlet-context
+
+親（レイアウト）側で `<Outlet context={/* loaderの返り値など */}>` でデータを渡してやると、
+子側でコンテキストとしてデータを読み取れる。親側のデータを子側から変える場合、`setState` をコンテキストを通じて渡す。
+エレガントさが失われてきた。

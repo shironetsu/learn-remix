@@ -1,8 +1,14 @@
 import { prisma } from "~/db.server";
 import type { Post } from "@prisma/client";
 
-export async function getPosts(): Promise<Array<Post>> {
-  return prisma.post.findMany();
+export async function getPosts(): Promise<Array<Pick<Post, 'slug' | 'title' | 'markdown'>>> {
+  return prisma.post.findMany({
+    select: {
+      slug: true,
+      title: true,
+      markdown: true,
+    }
+  });
 }
 
 export async function getPost(slug: string) {
