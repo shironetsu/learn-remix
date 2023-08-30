@@ -8,7 +8,7 @@ import {
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { getPost, updatePost } from "~/models/post.server";
+import { deletePost, getPost, updatePost } from "~/models/post.server";
 
 export const loader = async ({ params }: LoaderArgs) => {
   invariant(params.slug, "params.slug is required");
@@ -27,6 +27,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   await new Promise((res) => setTimeout(res, 1000));
   const formData = await request.formData();
 
+  const actionType = formData.get("action-type");
   const title = formData.get("title");
   const slug = formData.get("slug");
   const markdown = formData.get("markdown");
@@ -43,23 +44,32 @@ export const action = async ({ request, params }: ActionArgs) => {
     return json(errors);
   }
 
+  invariant(
+    actionType === "update" || actionType === "delete",
+    "action-type must be update or delete",
+  );
   invariant(typeof title === "string", "title must be a string");
   invariant(typeof slug === "string", "slug must be a string");
   invariant(typeof markdown === "string", "markdown must be a string");
   invariant(typeof currentSlug === "string", "currentSlug must be a string");
 
-  await updatePost(currentSlug, { title, slug, markdown });
-
-  //const encodedSlug = encodeURIComponent(slug)
-  // 勝手に中でURIエンコーディングしてくれるため不要らしい。
-  return redirect(`/posts/admin/${slug}`);
+  switch (actionType) {
+    case "update":
+      await updatePost(currentSlug, { title, slug, markdown });
+      //const encodedSlug = encodeURIComponent(slug)
+      // 勝手に中でURIエンコーディングしてくれるため不要らしい。
+      return redirect(`/posts/admin/${slug}`);
+    case "delete":
+      await deletePost(currentSlug);
+      return redirect(`/posts/admin`);
+  }
 };
 
 export default function EditPost() {
   const { post } = useLoaderData<typeof loader>();
   const errors = useActionData<typeof action>();
   const navigation = useNavigation();
-  const isUpdating = Boolean(navigation.state === "submitting");
+  const isSubmitting = Boolean(navigation.state === "submitting");
 
   return (
     <Form method="post">
@@ -114,17 +124,20 @@ export default function EditPost() {
         <button
           type="submit"
           className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400 disabled:bg-blue-300"
-          disabled={isUpdating}
+          disabled={isSubmitting}
+          name="action-type"
+          value="update"
         >
-          {isUpdating ? "Updating..." : "Update Post"}
+          {isSubmitting ? "Submitting..." : "Update Post"}
         </button>
-        {/* TODO: Delete */}
-        <button 
-            type="submit" 
-            className="rounded bg-red-500 py-2 px-4 text-white hover:bg-red-600 focus:bg-red-400 disabled:bg-red-300"
-            name="delete"
+        <button
+          type="submit"
+          className="rounded bg-red-500 py-2 px-4 text-white hover:bg-red-600 focus:bg-red-400 disabled:bg-red-300"
+          disabled={isSubmitting}
+          name="action-type"
+          value="delete"
         >
-            Delete Post
+          {isSubmitting ? "Submitting..." : "Delete Post"}
         </button>
       </p>
     </Form>

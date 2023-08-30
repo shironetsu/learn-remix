@@ -386,16 +386,21 @@ JavaScript なしでも機能することを保証して、あくまでもより
 
 404 になっている `http://localhost:3000/posts/admin/my-first-post` 等を表示できるようにするため、  `posts.admin.$slug.tsx` を独力で作ってみる。
 
-`loader` と `action` の両方がいる。
+投稿済みポストのデータの取得に `loader` 、データの更新に `action` と両方がいる。
+`loader` は `posts.$slug.tsx` から拝借する。~うーん、どこに置けばいいんだろう。とりあえずコピペ。~
+Markdownのパースをしなくて良いため共通化は避ける。
 
-`loader` は `posts.$slug.tsx` から拝借する。
-
-~うーん、どこに置けばいいんだろう。とりあえずコピペ。~
-
-Markdownのパースをしなくて良いので中身を変える。
-
-非制御コンポーネントなので `defaultValue` に入れた値が再描画で変わらない。
-
-`key` で強制更新できることは分かっているが、これって本当にベストな方法なのだろうか。
+非制御コンポーネントなので `defaultValue` に入れた値が再描画で変わらない。`key` で強制更新できることは分かっているが、これって本当にベストな方法なのだろうか。
 
 https://github.com/facebook/react/issues/4101
+
+更新機能はとりあえずできた。削除機能はどうしよう。
+
+form内に2つのボタンを置くので `formaction` + API エンドポイントか…と思ったが "Routes Are There Own API" の思想に沿わない。
+
+https://remix.run/docs/en/1.19.3/guides/api-routes#routes-are-their-own-api
+
+`<button>` に `name` + `value` を持たせて、押したボタンに応じてサーバー側の動作を切り替える方法で実現。
+
+ただ、本来削除動作にはid（今の場合 `slug`）だけ指定すれば良いので、`FormData` 丸ごとを送信するのはごくわずかだが無駄がある。メソッドを `DELETE` にできないのも若干気になる。
+

@@ -23,6 +23,14 @@ export async function updatePost(
     where: {
       slug: currentSlug,
     },
-    data: post
-  })
+    data: post,
+  });
+}
+
+export async function deletePost(slug: string) {
+  return prisma.post.delete({
+    where: {
+      slug,
+    },
+  });
 }
