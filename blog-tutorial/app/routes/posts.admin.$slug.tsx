@@ -110,13 +110,21 @@ export default function EditPost() {
           key={post.slug}
         />
       </p>
-      <p className="text-right">
+      <p className="flex flex-row justify-end item-center gap-x-2">
         <button
           type="submit"
           className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400 disabled:bg-blue-300"
           disabled={isUpdating}
         >
           {isUpdating ? "Updating..." : "Update Post"}
+        </button>
+        {/* TODO: Delete */}
+        <button 
+            type="submit" 
+            className="rounded bg-red-500 py-2 px-4 text-white hover:bg-red-600 focus:bg-red-400 disabled:bg-red-300"
+            name="delete"
+        >
+            Delete Post
         </button>
       </p>
     </Form>
