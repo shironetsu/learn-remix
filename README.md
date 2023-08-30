@@ -384,6 +384,8 @@ JavaScript なしでも機能することを保証して、あくまでもより
 
 ## Homework
 
+### Update/Delete
+
 404 になっている `http://localhost:3000/posts/admin/my-first-post` 等を表示できるようにするため、  `posts.admin.$slug.tsx` を独力で作ってみる。
 
 投稿済みポストのデータの取得に `loader` 、データの更新に `action` と両方がいる。
@@ -404,3 +406,30 @@ https://remix.run/docs/en/1.19.3/guides/api-routes#routes-are-their-own-api
 
 ただ、本来削除動作にはid（今の場合 `slug`）だけ指定すれば良いので、`FormData` 丸ごとを送信するのはごくわずかだが無駄がある。メソッドを `DELETE` にできないのも若干気になる。
 
+### Optimistic UI
+楽観的UI。
+
+https://remix.run/docs/en/main/guides/optimistic-ui
+
+```tsx
+export default function Page(){
+  const navigation = useNavigation()
+  const { formData } = navigation
+
+  if(formData){
+    // 送信と同時に `formData` に値が入るので、そのデータを元にして「更新に成功した場合のコンポーネント」を描画。
+    return <OnSuccessComponent />
+  } else {
+    return <MyForm />
+  }
+}
+```
+
+楽観的更新を行った時点ではナビゲーションが発生しない。
+`action` が成功した場合に、レスポンスを受け取ると画面の切り替わりなしにlocationが変わる。
+
+失敗した場合には元の画面に戻る。
+
+当然ながらクライアント側でJSを使うので、無効にすると動かない。
+
+これを踏まえて実装する。
